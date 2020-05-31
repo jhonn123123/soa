@@ -5,7 +5,6 @@
     $server->configureWSDL('WSDLTST',$miURL);
     $server->wsdl->schemaTargetNamespace=$miURL;
 
-
     if(!isset($HTTP_RAW_POST_DATA))
     {
         $HTTP_RAW_POST_DATA = file_get_contents('php://input');
@@ -615,7 +614,7 @@ if(!$enlace)
                     <h1 class='card-title'>".$fila['nombrep']."</h5>
                     <p class='card-text'>".$fila['descripcionp']."</p>
                     <h2 class='card-text'>$".$fila['precioc'].".00MXN</h2>
-                    <a href='carrito.php?id=".$fila['id']."' class='btn btn-primary'>Comprar</a>
+                    <a href='carrito.php?id=".$fila['id']."' class='btn btn-primary'>Añadir al carrito</a>
                   </div>
                 </div>
               </div>";
@@ -631,6 +630,411 @@ if(!$enlace)
     }
     else{
         $msg="*Error al mostrar los productos";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('carrito',
+array('id' => 'xsd:string','usuario' => 'xsd:string','cantidad' => 'xsd:int','nombrep' => 'xsd:string','descripcionp' => 'xsd:string','precioc' => 'xsd:string','foto' => 'xsd:string','total' => 'xsd:int'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function carrito($idc,$usuarioc,$cantidad,$productoc,$descripcionc,$preciocar,$foto,$total)
+{
+        $servidor="localhost";
+        $usuario="root";
+        $clave="Benito9710";
+        $BD="SOA_emarket";
+        $tabla="carrito";
+        
+
+    $enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+    if(!$enlace)
+    {
+        $msg="Error al conectarse";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+
+       
+        $insertar="INSERT INTO $tabla(idproducto, iduser, cantidad, producto, description, precio, foto, total) 
+        VALUES ('$idc','$usuarioc','$cantidad','$productoc','$descripcionc','$preciocar','$foto','$total')";
+
+        $resultado=mysqli_query($enlace,$insertar);
+
+        if($resultado){
+            $msg="Producto añadido al carrito";
+            return new soapval('return', 'xsd:string',$msg);
+        }
+        else{
+            $msg="*Error al ingresar producto al carrito";
+            return new soapval('return', 'xsd:string',$msg);
+        }
+        mysqli_close($enlace);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('mostrarcarrito',
+array('usuario' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function mostrarcarrito($user)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="carrito";
+    
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    $msg="";
+    $subtotal=0;
+   
+    $mostrar="SELECT * FROM $tabla";
+    
+    $resultado=mysqli_query($enlace,$mostrar);
+    $lista=mysqli_fetch_array($resultado);
+    $cantidades=2; 
+    
+    //$query2="SELECT * FROM $tabla ORDER By id";
+    
+    if($resultado)
+    {
+        $q=mysqli_real_escape_string($enlace,"");
+        /*$query2="SELECT departament, nombrep, descripcionp, precioc, foto FROM $tabla
+        WHERE departament LIKE '%".$q."%' OR nombrep LIKE '%".$q."%' OR descripcionp LIKE '%".$q."%' OR precioc LIKE '%".$q."%' 
+        OR foto LIKE '%".$q."%'";*/
+        $query2="SELECT * FROM $tabla WHERE iduser='$user'";
+        $resultado2=mysqli_query($enlace,$query2);
+        if($resultado2->num_rows>0)
+        {
+            $msg.="
+            <table class='table table-hover table-dark my-7'>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Producto</td>
+                            <td>Precio</td>
+                            <td>Eliminar</td>
+                        </tr>
+                    </thead>
+                    <tbody>";
+            //return new soapval('return', 'xsd:string',$msg); 
+            while($fila=$resultado2->fetch_assoc())
+            {
+                $msg.="
+                <tr class='table-active'>
+                <td><img src=".$fila['foto']." width='90' height='90'></td>
+                <td>".$fila['producto']."</td>
+                <td>$".$fila['precio'].".00</td>
+                <td><a href='deletecart.php?id=".$fila['id']."' class='btn btn-danger'>X</a></td>
+                
+              </tr>";
+             // $subtotal=$subtotal+$fila['total'];
+              //$cantidades=$_POST['cantidad'];
+            //return new soapval('return', 'xsd:string',$msg); 
+            //<td><a href='updateuser.php?id=".$fila['id']."' class='btn btn-warning' >Editar</a></td> 
+            } 
+            $msg.="</tbody></table>";
+            return new soapval('return', 'xsd:string',$msg);
+        }
+        else{
+            $msg="No se encontró resultado";
+            return new soapval('return', 'xsd:string',$msg);
+        }    
+    }
+    else{
+        $msg="*Error al mostrar el carrito";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('eliminar_carrito',
+array('id' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function eliminar_carrito($id)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="carrito";  
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    //$q=mysqli_real_escape_string($enlace,$busqueda2);
+    $query="DELETE FROM  $tabla WHERE id = '$id'";
+    $resultado=mysqli_query($enlace,$query);
+    
+    if($resultado)
+    {
+        $msg="Datos eliminados";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    else{
+        $msg="*Error al eliminar datos";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('mostrarsubtotal',
+array('usuario' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function mostrarsubtotal($user)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="carrito";
+    
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    $msg="";
+    $subtotal=0;
+   
+    $mostrar="SELECT * FROM $tabla";
+    $resultado=mysqli_query($enlace,$mostrar);
+    
+    if($resultado)
+    {
+        $q=mysqli_real_escape_string($enlace,"");
+        /*$query2="SELECT departament, nombrep, descripcionp, precioc, foto FROM $tabla
+        WHERE departament LIKE '%".$q."%' OR nombrep LIKE '%".$q."%' OR descripcionp LIKE '%".$q."%' OR precioc LIKE '%".$q."%' 
+        OR foto LIKE '%".$q."%'";*/
+        $query2="SELECT * FROM $tabla WHERE iduser='$user'";
+        $resultado2=mysqli_query($enlace,$query2);
+        if($resultado2->num_rows>0)
+        {
+            $msg.="
+            <div class='container p-l-40 p-r-40 p-t-30 p-b-38 m-t-10 m-r-5 m-l-auto p-lr-15-sm' id='tabla_total'>
+            <h5 class='m-text20 p-b-24'>
+                Total
+            </h5>
+
+            <div class='flex-w flex-sb-m p-b-12' >
+                <span class='s-text18 w-size19 w-full-sm'>
+                    Subtotal:
+                </span>
+            ";
+            //return new soapval('return', 'xsd:string',$msg); 
+            while($fila=$resultado2->fetch_assoc())
+            {
+                //$msg.="";
+                $subtotal+=$fila['total'];
+               
+            } 
+            $msg.="	
+                <span class='m-text21 w-size20 w-full-sm'id='total_carrito'>
+                    <h2 id='subtotal'>$".$subtotal.".00 MNX</h2>
+                </span>
+            </div>
+            </div>";
+            return new soapval('return', 'xsd:string',$msg);
+        }
+        else{
+            $msg="No se encontró resultado";
+            return new soapval('return', 'xsd:string',$msg);
+        }    
+    }
+    else{
+        $msg="*Error al mostrar el carrito";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('mostrarcheckout',
+array('usuario' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function mostrarcheckout($user)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="users";
+    
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    $msg="";
+    $subtotal=0;
+   
+    $mostrar="SELECT * FROM $tabla WHERE emaill='$user'";
+    $resultado=mysqli_query($enlace,$mostrar);
+    
+    if($resultado)
+    {
+        if(mysqli_num_rows($resultado)==1){
+            $row=mysqli_fetch_array($resultado);
+            $nombreuser=$row['name'];
+            $emailuser=$row['emaill'];
+            $passuser=$row['password'];
+            $addressuser=$row['address'];
+            $estadouser=$row['state'];
+            $celluser=$row['cell'];
+
+            $msg="
+            <div class='container p-l-40 p-r-40 p-t-30 p-b-38 m-t-10 m-r-5 m-l-auto p-lr-15-sm' id='tabla_total'>
+                <div class='flex-w flex-sb-m p-b-12'>
+					<span class='s-text18 w-size19 w-full-sm'>
+						Envio:
+					</span>
+					<span class='m-text21 w-size20 w-full-sm'id='shippin'>
+						<h2 id='shipping'>$150.00 MXN</h2>
+					</span>
+				</div>
+				<div class='flex-w flex-sb bo10 p-t-15 p-b-20'>
+					<span class='s-text18 w-size19 w-full-sm'>
+						Checkout:
+					</span>
+					<div class='w-size20 w-full-sm' id='tabla_subtotal'>
+						<p class='s-text8 p-b-23'>
+							Verifica que tus todos tus datos esten correctamente antes de proceder a la compra 
+						</p>
+
+						<div class='size13 bo4 m-b-12'>
+							<input class='sizefull s-text7 p-l-15 p-r-15' type='text' name='estadoss' placeholder='Estado' value=".$estadouser.">
+						</div>
+
+						<div class='size13 bo4 m-b-12'>
+						<input class='sizefull s-text7 p-l-15 p-r-15' type='text' name='nombre' placeholder='Nombre' value=".$nombreuser.">
+						</div>
+
+						<div class='size13 bo4 m-b-22'>
+							<input class='sizefull s-text7 p-l-15 p-r-15' type='text' name='celular' placeholder='+52' value='+52 ".$celluser."'>
+						</div>
+
+
+					</div>
+                </div>
+            </div>";
+            return new soapval('return', 'xsd:string',$msg);
+        }   
+        
+        
+    }
+    else{
+        $msg="*Error al mostrar el carrito";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('mostrartotal',
+array('usuario' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function mostrartotal($user)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="carrito";
+    
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    $msg="";
+    $total=0;
+   
+    $mostrar="SELECT * FROM $tabla";
+    $resultado=mysqli_query($enlace,$mostrar);
+    
+    if($resultado)
+    {
+        $q=mysqli_real_escape_string($enlace,"");
+        /*$query2="SELECT departament, nombrep, descripcionp, precioc, foto FROM $tabla
+        WHERE departament LIKE '%".$q."%' OR nombrep LIKE '%".$q."%' OR descripcionp LIKE '%".$q."%' OR precioc LIKE '%".$q."%' 
+        OR foto LIKE '%".$q."%'";*/
+        $query2="SELECT * FROM $tabla WHERE iduser='$user'";
+        $resultado2=mysqli_query($enlace,$query2);
+        if($resultado2->num_rows>0)
+        {
+            $msg.="
+            <div class='container p-l-40 p-r-40 p-t-30 p-b-38 m-t-10 m-r-5 m-l-auto p-lr-15-sm' id='tabla_total'>
+            ";
+            //return new soapval('return', 'xsd:string',$msg); 
+            while($fila=$resultado2->fetch_assoc())
+            {
+                //$msg.="";
+                $total+=$fila['total'];
+               
+            } 
+            $total=$total+150;
+            $msg.="	
+        <div class='flex-w flex-sb-m p-t-26 p-b-30'>
+            <span class='m-text22 w-size19 w-full-sm'>
+                Total:
+            </span>
+
+            <span class='m-text21 w-size20 w-full-sm'>
+                <h3 id='total2'>$".$total.".00 MXN</h3>
+            </span>
+        </div>
+
+        <div id='paypal-button-container'></div>
+
+  <script>
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      // This function sets up the details of the transaction, including the amount and line item details.
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '".$total."'
+          }
+        }]
+      });
+    }
+  }).render('#paypal-button-container');
+  </script>
+
+        </div>";
+            return new soapval('return', 'xsd:string',$msg);
+        }
+        else{
+            $msg="No se encontró resultado";
+            return new soapval('return', 'xsd:string',$msg);
+        }    
+    }
+    else{
+        $msg="*Error al mostrar el carrito";
         return new soapval('return', 'xsd:string',$msg);
     }
     mysqli_close($enlace);

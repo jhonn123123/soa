@@ -3,6 +3,12 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://kit.fontawesome.com/493a09995c.js" crossorigin="anonymous"></script>
 <link rel="stylesheet"  href="css/nav.css">
+<link rel="stylesheet"  href="css/form.css">
+<link rel="stylesheet" type="text/css" href="css/utilidad.css">
+<link rel="stylesheet" type="text/css" href="css/ingresar.css">
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AePSnQfQC_z6m6GOsHP1uJ4uHVIgrbliPXHegzZbR1w8seXTgnCA8FHJhd-xbrz9qjEUykevkM9srMPZ"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+  </script>
 <head>
     <meta charset="UTF-8">
     <title>Carrito</title>
@@ -52,13 +58,14 @@
 		<h1 class="l-text2 t-center container-sm" style="color: black">
 			Carrito
 		</h1>
-    </section>
+  </section>
     
     
 
   
   <?php
-    /*require_once("lib/nusoap.php");
+    require_once("lib/nusoap.php");
+    include("db.php");
 
     $serverURL = 'http://localhost/pwsdlpass/server2.php';
     $cliente = new nusoap_client("$serverURL?wsdl",'wsdl');
@@ -66,20 +73,76 @@
     session_start();
     $user=$_SESSION['usuario'];
 
-    if(isset($user)){
+    
+    if(isset($_GET['id'])){
+        
+        $id=(int)$_GET['id'];
+        $tabla="tproductos";
+        $query="SELECT * FROM $tabla where id=$id";
+    
+        $resultado=mysqli_query($enlace,$query);
+        if($resultado)
+        {
+            if(mysqli_num_rows($resultado)==1){
+            $row=mysqli_fetch_array($resultado);
+          
+            $namep=$row['nombrep'];
+            $descripcionp=$row['descripcionp'];
+            $preciop=$row['precioc'];
+            $fotop=$row['foto'];
+            $cantidad=1;
+            $cantidadS=(string)$cantidad;
+            $total=$cantidad*(int)$preciop;
+            $totalS=(string)$total;
+
+            $carrito=$cliente->call(
+            "carrito",
+            array('id' => $id,'usuario' => $user,'cantidad' => $cantidad,'nombrep' => $namep,
+            'descripcionp' => $descripcionp,'precioc' => $preciop,'foto' => $fotop,'total' => $total),
+            "uri:$serverURL"
+            );
+          //  echo'<br><font color="black">'.$carrito.'</font>';
+            }
+        }
+      }
+
+      if(isset($user)){
       
-      //echo $user;
-      $mostrarp=$cliente->call(
-        "mostrarp",
-        array('usuario' => $user),
-        "uri:$serverURL"
-        ); 
-    }
+        //echo $user;
+        $mostrarcarrito=$cliente->call(
+          "mostrarcarrito",
+          array('usuario' => $user),
+          "uri:$serverURL"
+          ); 
+
+        $mostrarsubtotal=$cliente->call(
+           "mostrarsubtotal",
+           array('usuario' => $user),
+           "uri:$serverURL"
+           );  
+
+        $mostrarcheckout=$cliente->call(
+          "mostrarcheckout",
+          array('usuario' => $user),
+          "uri:$serverURL"
+          );  
+        
+        $mostrartotal=$cliente->call(
+          "mostrartotal",
+          array('usuario' => $user),
+          "uri:$serverURL"
+          );    
+          
+      }
+
 
     
-    echo'<br><font color="black">'.$mostrarp.'</font>';*/
+    echo'<br><font color="black">'.$carrito.'</font>';
+    echo'<br><font color="black">'.$mostrarcarrito.'</font>';
+    echo'<br><font color="black">'.$mostrarsubtotal.'</font>';
+    echo'<br><font color="black">'.$mostrarcheckout.'</font>';
+    echo'<br><font color="black">'.$mostrartotal.'</font>';
   ?>
- 
 
     
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

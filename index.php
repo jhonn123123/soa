@@ -37,7 +37,7 @@
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="buscar">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
     </form>
-    <i class="fas fa-shopping-cart fa-2x"></i>
+    <a href="carrito.php"><i class="fas fa-shopping-cart fa-2x"></i></a>
     <a href="login.php"><i class="far fa-user-circle fa-2x"></i></a>
     
       

@@ -133,7 +133,7 @@
       <legend class="col-form-label col-sm-10 pt-0">Producto visible?</legend>
       <div class="col-sm-10">
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="visible" id="visible" value="<?php echo $visiblep;?>" checked>
+          <input class="form-check-input" type="radio" name="visible" id="visible" value="si" checked>
           <label class="form-check-label" for="visible">
             Visible
           </label>
