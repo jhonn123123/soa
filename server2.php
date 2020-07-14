@@ -1040,5 +1040,88 @@ if(!$enlace)
     mysqli_close($enlace);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('smtp',
+array('usuario' => 'xsd:string','asunto' => 'xsd:string','mensaje' => 'xsd:string'),
+array('return' => 'xsd:string'),    
+$miURL);
+
+function smtp($user,$asunto,$mensaje)
+{
+    $servidor="localhost";
+    $usuario="root";
+    $clave="Benito9710";
+    $BD="SOA_emarket";
+    $tabla="users";
+    
+
+$enlace=mysqli_connect($servidor,$usuario,$clave,$BD);
+if(!$enlace)
+{
+    $msg="Error al conectarse";
+    return new soapval('return', 'xsd:string',$msg);
+}
+    $msg="";
+   
+    $mostrar="SELECT * FROM $tabla WHERE emaill='$user'";
+    $resultado=mysqli_query($enlace,$mostrar);
+    
+    if($resultado)
+    {
+        if(mysqli_num_rows($resultado)==1){
+            $row=mysqli_fetch_array($resultado);
+            $nombreuser=$row['name'];
+            $emailuser=$row['emaill'];
+            $passuser=$row['password'];
+            $addressuser=$row['address'];
+            $estadouser=$row['state'];
+            $celluser=$row['cell'];
+
+            $msg="
+            <script>
+            Email.send({
+                SecureToken: 'f4879152-9d23-4e5d-aa67-9e370bdbf599',
+                To: '".$user."',
+                From: 'juan_mbg@hotmail.com',
+                Subject: '".$asunto."',
+                Body: '".$mensaje." de ".$nombreuser."'
+            }).then(
+                console.log('enviado'),
+                alert('correo enviado')
+            );
+            </script>
+            ";
+            return new soapval('return', 'xsd:string',$msg);
+        }   
+        
+        
+    }
+    else{
+        $msg="*Error al enviar el correo";
+        return new soapval('return', 'xsd:string',$msg);
+    }
+    mysqli_close($enlace);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+$server->register('recaptcha',
+        array('g-recaptcha-response' => 'xsd:string'),
+        array('return' => 'xsd:string'),
+        $miURL);
+
+        function recaptcha($captcha)
+        {
+            $secret='6LcNQPwUAAAAAG6iKMBdgvr7U-BoSQOLGZqoYu7t';
+            $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha");
+            $arr=json_decode($response,TRUE);
+            if($arr['success'])
+            {
+                $msg="OK";
+                return new soapval('return', 'xsd:string',$msg);
+            }
+            else{
+                $msg="catpcha incorrecto";
+            return new soapval('return', 'xsd:string',$msg);
+            }
+        } 
+////////////////////////////////////////////////////////////////////////////////////////////////
     $server->service($HTTP_RAW_POST_DATA);
     ?>

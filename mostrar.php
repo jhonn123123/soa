@@ -62,6 +62,7 @@
       </div>
         <input type="submit" name="mostrar" class="btn btn-success" value="Mostrar Productos">
         <input type="submit" name="eliminar" class="btn btn-danger" value="Eliminar Producto">
+        <a href="ingresarproductos.php" class="btn btn-dark" >ingresar productos</a>
         <input type="submit" name="usuarios" class="btn btn-info" value="ver usuarios">
     </form>
 

@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="css/utilidad.css">
 <link rel="stylesheet" type="text/css" href="css/ingresar.css">
 <script
-    src="https://www.paypal.com/sdk/js?client-id=AePSnQfQC_z6m6GOsHP1uJ4uHVIgrbliPXHegzZbR1w8seXTgnCA8FHJhd-xbrz9qjEUykevkM9srMPZ"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    src="https://www.paypal.com/sdk/js?client-id=AePSnQfQC_z6m6GOsHP1uJ4uHVIgrbliPXHegzZbR1w8seXTgnCA8FHJhd-xbrz9qjEUykevkM9srMPZ&currency=MXN"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
   </script>
 <head>
     <meta charset="UTF-8">

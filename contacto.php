@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://kit.fontawesome.com/493a09995c.js" crossorigin="anonymous"></script>
 <link rel="stylesheet"  href="css/nav.css">
+<link rel="stylesheet" href="css/estilos.css">
+<script src="https://smtpjs.com/v3/smtp.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido</title>
@@ -47,47 +49,39 @@
 </head>
 <body>
   
+<div class="upcont">
+        <section class="l-section s-100 contac" id="">
+            <div class="contac__content">
+                <h1 class="center-content">Contacto</h1>
+            </div>
+        </section>
+    </div>
+    <section class="l-section cont">
+        <div class="espcont center-content center-block">
+            <div class="espform s-30 center-block center-content">
+                <form action="" method="post">
+                    <div class="espnom">
+                        <label for="nombre">Asunto</label>
+                        <input id="asunto" name="asunto" type="text"  maxlength="50" data-length="50" required />
+                    </div>
+                    
+                    <div class="espmen">
+                        <label for="titmensaje">Mensaje</label>
+                        <div class="alturaMensa">
+                            <textarea name="mensaje" id="mensaje" class="ESPmensaje center-content" required></textarea>
+                        </div>
+                    </div>
+                    <div class="espenv">
+                        <button type="submit" name="submit">Enviar</button>
+                        <h5 class="notifCorrecto"> <?= $result; ?></h5>
+                    </div>
+                </form>
+                                   
+            </div> 
+        </div>                     
+    </section>
 
-  <div style="width: 650px; height: auto;" id="carouselExampleIndicators" class="container-sm text-center carousel slide  " data-ride="carousel">
-    <ol class="carousel-indicators">
-      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="img/logo.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="img/iphone-11-pro-max.png" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="img/Samsung-Galaxy-S20.jpg" class="d-block w-100" alt="...">
-      </div>
-    </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
-  </div>
- <!-- <button  type="submit" name="productos" class="btn btn-info">Productos</button>-->
-<!--//////////////////////////////////////////////////////////////////////////////////////    
-<div class="row row-cols-1 row-cols-md-4">
-  <div class="col mb-5">
-    <div class="card h-100">
-      <img src="img/productos/ipads.jpg" style="height: auto;" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Producto</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-</div>
--->
+  
   <?php
     require_once("lib/nusoap.php");
 
@@ -96,19 +90,28 @@
 
     session_start();
     $user=$_SESSION['usuario'];
-
-    if(isset($user)){
+    if($user!=""||$user!=null)
+    {
+        if(isset($_POST['submit'])){
       
-      //echo $user;
-      $mostrarp=$cliente->call(
-        "mostrarp",
-        array('usuario' => $user),
-        "uri:$serverURL"
-        ); 
+        $asunto=$_POST['asunto'];
+        $mensaje=$_POST['mensaje'];
+        
+        $smtp=$cliente->call(
+            "smtp",
+            array('usuario' => $user,'asunto' => $asunto,'mensaje' => $mensaje),
+            "uri:$serverURL"
+            ); 
+        }
     }
-
+    else{
+        echo'<div class="alert alert-danger" role="alert">
+        No estas logueado, no puedes enviar mensajes
+      </div>';
+    }
     
-    echo'<br><font color="black">'.$mostrarp.'</font>';
+    echo'<br><font color="black">'.$smtp.'</font>';
+
   ?>
  
 

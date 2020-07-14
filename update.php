@@ -44,7 +44,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Altas Telefonos</title>
+    <title>Actualizar Productos</title>
 
     <nav class="navbar navbar-light" style="background-color: papayawhip;">  
     <ul>
