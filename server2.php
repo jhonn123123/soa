@@ -683,7 +683,7 @@ function mostrarcarrito($user)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="carrito";
     
@@ -766,7 +766,7 @@ function eliminar_carrito($id)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="carrito";  
 
@@ -801,7 +801,7 @@ function mostrarsubtotal($user)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="carrito";
     
@@ -875,7 +875,7 @@ function mostrarcheckout($user)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="users";
     
@@ -959,7 +959,7 @@ function mostrartotal($user)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="carrito";
     
@@ -1049,7 +1049,7 @@ function smtp($user,$asunto,$mensaje)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="users";
     
