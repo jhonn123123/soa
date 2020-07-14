@@ -2,7 +2,7 @@
 
 $servidor="localhost";
 $usuario="root";
-$clave="Benito9710";
+$clave="";
 $BD="SOA_emarket";
 $tabla="tproductos";
 

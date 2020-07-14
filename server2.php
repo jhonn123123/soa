@@ -92,7 +92,7 @@
     {
         $servidor="localhost";
         $usuario="root";
-        $clave="Benito9710";
+        $clave="";
         $DB="SOA_emarket";
         
 
@@ -132,7 +132,7 @@ $server->register('valida_login',
     {
         $servidor="localhost";
         $usuario="root";
-        $clave="Benito9710";
+        $clave="";
         $DB="SOA_emarket";
         
         $enlace=mysqli_connect($servidor,$usuario,$clave,$DB);
@@ -171,7 +171,7 @@ $server->register('valida_login',
     {
         $servidor="localhost";
         $usuario="root";
-        $clave="Benito9710";
+        $clave="";
         $BD="SOA_emarket";
         $tabla="celulares";
         
@@ -209,7 +209,7 @@ $server->register('ingresar_productos',
     {
         $servidor="localhost";
         $usuario="root";
-        $clave="Benito9710";
+        $clave="";
         $BD="SOA_emarket";
         $tabla="tproductos";
         
@@ -248,7 +248,7 @@ function mostrar_productos($busqueda)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="tproductos";
     
@@ -334,7 +334,7 @@ function update_productos($idu,$depau,$nombreu,$despcionu,$preciou,$visibleu,$im
  
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="tproductos";
     
@@ -373,7 +373,7 @@ function showusers($busqueda)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="users";
     
@@ -455,7 +455,7 @@ function eliminar_telefonos($busqueda2)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="tproductos";
     
@@ -493,7 +493,7 @@ function eliminar_p($id)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="tproductos";
     
@@ -532,7 +532,7 @@ function update_user($idu,$nombreus,$emailus,$addressus,$estadous,$celularus)
  
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="users";
     
@@ -571,7 +571,7 @@ function mostrarp($user)
 {
     $servidor="localhost";
     $usuario="root";
-    $clave="Benito9710";
+    $clave="";
     $BD="SOA_emarket";
     $tabla="tproductos";
     
